@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  base:
+    build: ./container-base
+    container_name: code-cooker-base
+    ports:
+      - 7860:7860
+    tty: true
+    volumes:
+      - .:/root
+    extra_hosts:
+      # - 'host.docker.internal:host-gateway'
+      - 'host.docker.internal:172.19.128.1'
+
+  gpu:
+    build: ./container-base
+    tty: true
+    volumes:
+      - .:/root
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    extra_hosts:
+      # - 'host.docker.internal:host-gateway'
+      - 'host.docker.internal:172.19.128.1'
